@@ -1,9 +1,14 @@
 import { ReactNode } from "react";
 import CourseNavigation from "./Navigation";
 
-export default function CoursesLayout(
-  { children, params }: Readonly<{ children: ReactNode; params: { cid: string } }>
-) {
+// ✅ Use Next.js built-in type for params
+export default function CoursesLayout({
+  children,
+  params,
+}: {
+  children: ReactNode;
+  params: { cid: string };
+}) {
   return (
     <div id="wd-courses">
       <h2>Courses {params.cid}</h2>
