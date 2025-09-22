@@ -225,7 +225,7 @@ Your favorite books (in no particular order)
 Please
 <a href="https://www.lipsum.com" id="wd-lipsum">click here</a>
 to get dummy text<br/>
-<a href="https://www.lipsum.com" id="wd-lipsum">Github Code </a>
+<a href="https://github.com/snkdeveloper/kambaz-next-js" id="wd-github">Github Code </a>
 
 
 
