@@ -7,7 +7,7 @@ export default async function CoursesLayout(
  return (
    <div id="wd-courses">
      <h2 className="text-danger">
-      <FaAlignJustify className="me-4 fs-4 mb-1" />ourses {cid}</h2>
+      <FaAlignJustify className="me-4 fs-4 mb-1" />Courses {cid}</h2>
      <hr />
      <div className="d-flex">
     <div className="d-none d-md-block">

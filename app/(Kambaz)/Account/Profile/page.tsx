@@ -1,20 +1,76 @@
+// app/(Kambaz)/Account/Profile/page.tsx
+
+"use client";
+
 import Link from "next/link";
+import { Form, Card, Container, Row, Col, Button } from "react-bootstrap";
+import 'bootstrap/dist/css/bootstrap.min.css';
+
 export default function Profile() {
   return (
-    <div id="wd-profile-screen">
-      <h3>Profile</h3>
-      <input defaultValue="alice" placeholder="username" className="wd-username"/><br/>
-      <input defaultValue="123"   placeholder="password" type="password"
-             className="wd-password" /><br/>
-      <input defaultValue="Alice" placeholder="First Name" id="wd-firstname" /><br/>
-      <input defaultValue="Wonderland" placeholder="Last Name" id="wd-lastname" /><br/>
-      <input defaultValue="2000-01-01" type="date" id="wd-dob" /><br/>
-      <input defaultValue="alice@wonderland" type="email" id="wd-email" /><br/>
-      <select defaultValue="FACULTY" id="wd-role">
-        <option value="USER">User</option>       <option value="ADMIN">Admin</option>
-        <option value="FACULTY">Faculty</option> <option value="STUDENT">Student</option>
-      </select><br/>
-      <Link href="Signin" > Sign out </Link>
-    </div>
-);}
+    <div>
+      <h1 style={{ color: 'red', textAlign: 'center' }}>Sachet Kanchugar &apos; Kambas</h1>
+    <Container fluid className="vh-100">
+      <Row className="h-100 justify-content-center align-items-center">
+        <Col xs={12} md={6} lg={4}>
+          <Card className="p-4 shadow-sm">
+            <h3 className="mb-4 text-center">Profile</h3>
+            <Form>
+              <Form.Control
+                type="text"
+                placeholder="Username"
+                defaultValue="alice"
+                className="mb-3"
+              />
+              <Form.Control
+                type="password"
+                placeholder="Password"
+                defaultValue="123"
+                className="mb-3"
+              />
+              <Form.Control
+                type="text"
+                placeholder="First Name"
+                defaultValue="Alice"
+                className="mb-3"
+                id="wd-firstname"
+              />
+              <Form.Control
+                type="text"
+                placeholder="Last Name"
+                defaultValue="Wonderland"
+                className="mb-3"
+                id="wd-lastname"
+              />
+              <Form.Control
+                type="date"
+                defaultValue="2000-01-01"
+                className="mb-3"
+                id="wd-dob"
+              />
+              <Form.Control
+                type="email"
+                placeholder="Email"
+                defaultValue="alice@wonderland"
+                className="mb-3"
+                id="wd-email"
+              />
+              <Form.Select defaultValue="FACULTY" className="mb-3" id="wd-role">
+                <option value="USER">User</option>
+                <option value="ADMIN">Admin</option>
+                <option value="FACULTY">Faculty</option>
+                <option value="STUDENT">Student</option>
+              </Form.Select>
 
+              {/* Sign Out Button */}
+              <Link href="/Account/Signin" className="btn btn-danger w-100 mt-2 text-center">
+                Sign out
+              </Link>
+            </Form>
+          </Card>
+        </Col>
+      </Row>
+    </Container>
+    </div>
+  );
+}

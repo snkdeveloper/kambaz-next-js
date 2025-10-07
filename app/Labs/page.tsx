@@ -2,7 +2,8 @@ import Link from "next/link";
 export default function Labs() {
  return (
    <div id="wd-labs">
-     <h1>Labs</h1>
+    <h1 style={{ color: 'red', textAlign: 'center' }}>Sachet Kanchugar &apos; Web Development Assignments</h1>
+     <h2>Labs</h2>
      <ul>
        <li>
          <Link href="/Labs/Lab1" id="wd-lab1-link">
@@ -11,6 +12,7 @@ export default function Labs() {
        <li>
          <Link href="/Labs/Lab2" id="wd-lab2-link">
            Lab 2: CSS Basics </Link>
+           
        </li>
        <li>
          <Link href="/Labs/Lab3" id="wd-lab3-link">

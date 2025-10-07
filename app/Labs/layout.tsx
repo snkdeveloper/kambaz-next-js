@@ -1,11 +1,16 @@
 import { ReactNode } from "react";
 import TOC from "./TOC";
-
-
+import KambazNavigation from "./Navigation";
+import "./styles.css"
 export default function LabsLayout({
  children,
 }: Readonly<{ children: ReactNode }>) {
  return (
+  <div id="wd-kambaz">
+  <div>
+        <KambazNavigation />
+      </div>
+  <div className="wd-main-content-offset p-3  flex-fill">
    <table>
      <tbody>
        <tr>
@@ -16,5 +21,7 @@ export default function LabsLayout({
        </tr>
      </tbody>
    </table>
+   </div>
+   </div>
 );}
 

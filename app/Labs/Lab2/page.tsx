@@ -22,6 +22,8 @@ import BootstrtrapNavigation from "./BootstrapNavigation";
 export default function Lab2() {
   return (
     <Container>
+      <h1 style={{ color: 'red', textAlign: 'center' }}>Sachet Kanchugar &apos; Kambas</h1>
+   
       <h2>Lab 2 - Cascading Style Sheets</h2>
       <h3>Styling with the STYLE attribute</h3>
       <p >
