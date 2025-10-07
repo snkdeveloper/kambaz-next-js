@@ -3,7 +3,7 @@
 export default function Lab1() {
   return (
     <div id="wd-lab1">
-       <h1 style={{ color: 'red', textAlign: 'center' }}>Sachet Kanchugar &apos; Kambas</h1>
+       <h1 style={{ color: 'red', textAlign: 'center' }}>Sachet Kanchugar &apos; Assignment 1</h1>
    
       <h2>Lab 1</h2>
       <h3>HTML Examples</h3>
