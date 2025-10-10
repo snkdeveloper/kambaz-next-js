@@ -9,7 +9,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 export default function Profile() {
   return (
     <div>
-      <h1 style={{ color: 'red', textAlign: 'center' }}>Sachet Kanchugar &apos; Kambas</h1>
+      
     <Container fluid className="vh-100">
       <Row className="h-100 justify-content-center align-items-center">
         <Col xs={12} md={6} lg={4}>

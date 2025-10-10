@@ -18,37 +18,37 @@ const courses = [
     id: '2345',
     title: 'CS2345 Node.js',
     description: 'Build scalable backend APIs',
-    image: '/images/reactjs.jpg',
+    image: '/images/node.png',
   },
   {
     id: '3456',
     title: 'CS3456 MongoDB',
     description: 'Learn NoSQL with MongoDB',
-    image: '/images/reactjs.jpg',
+    image: '/images/mongodb.png',
   },
   {
     id: '4567',
     title: 'CS4567 HTML & CSS',
     description: 'Master frontend design',
-    image: '/images/reactjs.jpg',
+    image: '/images/html.png',
   },
   {
     id: '5678',
     title: 'CS5678 JavaScript',
     description: 'JavaScript from basics to ES6+',
-    image: '/images/reactjs.jpg',
+    image: '/images/javascript.png',
   },
   {
     id: '6789',
     title: 'CS6789 TypeScript',
     description: 'Strongly typed JS',
-    image: '/images/reactjs.jpg',
+    image: '/images/typescript.png',
   },
   {
     id: '7890',
     title: 'CS7890 Next.js',
     description: 'Server-side rendering with React',
-    image: '/images/reactjs.jpg',
+    image: '/images/next.jpg',
   },
 ];
 
@@ -64,7 +64,8 @@ export default function Dashboard() {
   }, [pathname, router]);
 
   return (
-    <div id="wd-dashboard" style={{ marginLeft: 120, padding: 30 }}>
+    //<div id="wd-dashboard" style={{ marginLeft: 120, padding: 30 }}>
+    <div id="wd-dashboard">
       <h1 id="wd-dashboard-title">Dashboard</h1>
       <hr />
       <h2 id="wd-dashboard-published">Published Courses ({courses.length})</h2>
@@ -87,8 +88,9 @@ export default function Dashboard() {
                     src={course.image}
                     width="100%"
                     height={160}
+                    object-fit="fill"
                     alt={course.title}
-                    style={{ objectFit: 'cover' }}
+                    style={{ objectFit: 'fill' }}
                   />
                   <CardBody>
                     <CardTitle className="wd-dashboard-course-title text-nowrap overflow-hidden">
