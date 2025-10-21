@@ -1,10 +1,16 @@
+"use client";
 import { ListGroup, ListGroupItem } from "react-bootstrap";
 import { BsGripVertical, BsThreeDotsVertical } from "react-icons/bs";
 import { FaCheckCircle, FaRegFileAlt } from "react-icons/fa";
 import Link from "next/link";
+import { useParams } from "next/navigation";
+import * as db  from "../../../Database";
 import "../../../../../app/(Kambaz)/styles.css";
 
 export default function Assignments() {
+  const { cid } = useParams();
+  const assignments = db.assignments.filter((a) => a.course === cid);
+
   return (
     <div id="wd-assignments-page" className="p-3 bg-light">
       {/* Header */}
@@ -31,89 +37,42 @@ export default function Assignments() {
       </div>
 
       {/* Assignment list */}
-     <ListGroup className="rounded-0">
-        {/* A1 */}
-        <ListGroupItem
-          className="d-flex align-items-start justify-content-between border-success bg-white"
-          style={{ borderWidth: "0px 0px 0px 4px" }}
-        >
-          <div className="d-flex align-items-start">
-            <BsGripVertical className="me-3 mt-1 fs-4 text-secondary" />
-            <FaRegFileAlt className="me-3 mt-1 fs-4 text-secondary" />
-            <div>
-              <Link
-                href="#"
-                className="text-decoration-none fw-semibold text-dark fs-5"
-              >
-                A1
-              </Link>
-              <div className="text-muted small mt-1">
-                <span className="text-danger fw-semibold">
-                  Multiple Modules
-                </span>{" "}
-                | <strong>Not available until</strong> May 6 at 12:00am | Due
-                May 13 at 11:59pm | 100 pts
+      <ListGroup className="rounded-0">
+        {assignments.map((a) => (
+          <ListGroupItem
+            key={a._id}
+            className="d-flex align-items-start justify-content-between border-success bg-white"
+            style={{ borderWidth: "0px 0px 0px 4px" }}
+          >
+            <div className="d-flex align-items-start">
+              <BsGripVertical className="me-3 mt-1 fs-4 text-secondary" />
+              <FaRegFileAlt className="me-3 mt-1 fs-4 text-secondary" />
+              <div>
+                <Link
+                  href={`/Courses/${cid}/Assignments/${a._id}`}
+                  className="text-decoration-none fw-semibold text-dark fs-5"
+                >
+                  {a.title}
+                </Link>
+                <div className="text-muted small mt-1">
+                  <span className="text-danger fw-semibold">Multiple Modules</span>{" "}
+                  | <strong>Not available until</strong> {a.available || "TBA"} at 12:00am |{" "}
+                  <strong>Due</strong> {a.due || "TBA"} at 11:59pm |{" "}
+                  {a.points || 100} pts
+                </div>
               </div>
             </div>
-          </div>
 
-          <div className="d-flex align-items-center gap-2">
-            <FaCheckCircle className="text-success fs-4" />
-            <BsThreeDotsVertical className="fs-5 text-secondary" />
-          </div>
-        </ListGroupItem>
-
-        {/* A2 */}
-        <ListGroupItem
-          className="d-flex align-items-start justify-content-between  border-success bg-white"
-          style={{ borderWidth: "0 0 0 4px" }}
-        >
-          <div className="d-flex align-items-start">
-            <BsGripVertical className="me-3 mt-1 fs-4 text-secondary" />
-            <FaRegFileAlt className="me-3 mt-1 fs-4 text-secondary" />
-            <div>
-              <span className="fw-semibold fs-5">A2</span>
-              <div className="text-muted small mt-1">
-                <span className="text-danger fw-semibold">
-                  Multiple Modules
-                </span>{" "}
-                | <strong>Not available until</strong> May 13 at 12:00am | Due
-                May 20 at 11:59pm | 100 pts
-              </div>
+            <div className="d-flex align-items-center gap-2">
+              <FaCheckCircle className="text-success fs-4" />
+              <BsThreeDotsVertical className="fs-5 text-secondary" />
             </div>
-          </div>
+          </ListGroupItem>
+        ))}
 
-          <div className="d-flex align-items-center gap-2">
-            <FaCheckCircle className="text-success fs-4" />
-            <BsThreeDotsVertical className="fs-5 text-secondary" />
-          </div>
-        </ListGroupItem>
-
-        {/* A3 */}
-        <ListGroupItem
-          className="d-flex align-items-start justify-content-between  border-success bg-white"
-          style={{ borderWidth: "0 0 0 4px" }}
-        >
-          <div className="d-flex align-items-start">
-            <BsGripVertical className="me-3 mt-1 fs-4 text-secondary" />
-            <FaRegFileAlt className="me-3 mt-1 fs-4 text-secondary" />
-            <div>
-              <span className="fw-semibold fs-5">A3</span>
-              <div className="text-muted small mt-1">
-                <span className="text-danger fw-semibold">
-                  Multiple Modules
-                </span>{" "}
-                | <strong>Not available until</strong> May 20 at 12:00am | Due
-                May 27 at 11:59pm | 100 pts
-              </div>
-            </div>
-          </div>
-
-          <div className="d-flex align-items-center gap-2">
-            <FaCheckCircle className="text-success fs-4" />
-            <BsThreeDotsVertical className="fs-5 text-secondary" />
-          </div>
-        </ListGroupItem>
+        {assignments.length === 0 && (
+          <div className="p-3 text-muted">No assignments found for this course.</div>
+        )}
       </ListGroup>
     </div>
   );

@@ -1,27 +1,49 @@
+"use client";
 import React from "react";
 import { Form, Button, Row, Col } from "react-bootstrap";
-import 'bootstrap/dist/css/bootstrap.min.css';
+import Link from "next/link";
+import { useParams } from "next/navigation";
+import * as db from "../../../../Database";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 export default function AssignmentEditor() {
+  const { cid, aid } = useParams();
+
+  // find selected assignment
+  const assignment = db.assignments.find(
+    (a) => a.course === cid && a._id === aid
+  );
+
+  if (!assignment) {
+    return (
+      <div className="p-4 text-danger">
+        <h5>Assignment not found.</h5>
+      </div>
+    );
+  }
+
   return (
     <div id="wd-assignments-editor" className="p-4">
       <h3>Edit Assignment</h3>
       <Form>
         {/* Assignment Name */}
         <Form.Label className="mt-3">Assignment Name</Form.Label>
-        <Form.Control type="text" defaultValue="A1 - ENV + HTML" />
+        <Form.Control type="text" defaultValue={assignment.title} />
 
         {/* Description */}
         <Form.Label className="mt-3">Description</Form.Label>
         <Form.Control
           as="textarea"
           rows={3}
-          defaultValue="The assignment is available online. Submit a link to the landing page of"
+          defaultValue={
+            assignment.description ||
+            "Enter the assignment details or description here."
+          }
         />
 
         {/* Points */}
         <Form.Label className="mt-3">Points</Form.Label>
-        <Form.Control type="number" defaultValue={100} />
+        <Form.Control type="number" defaultValue={assignment.points || 100} />
 
         {/* Assignment Group & Display Grade */}
         <Row className="mt-3">
@@ -59,11 +81,15 @@ export default function AssignmentEditor() {
         <Row className="mt-3">
           <Col>
             <Form.Label>Assign To</Form.Label>
-            <Form.Control type="text" />
+            <Form.Control type="text" placeholder="Everyone" />
           </Col>
           <Col>
             <Form.Label>Due Date</Form.Label>
-            <Form.Control type="date" />
+            <Form.Control
+              type="text"
+              defaultValue={assignment.due || "TBA"}
+              readOnly
+            />
           </Col>
         </Row>
 
@@ -71,18 +97,26 @@ export default function AssignmentEditor() {
         <Row className="mt-3">
           <Col>
             <Form.Label>Available From</Form.Label>
-            <Form.Control type="date" />
+            <Form.Control
+              type="text"
+              defaultValue={assignment.available || "TBA"}
+              readOnly
+            />
           </Col>
           <Col>
             <Form.Label>Available Until</Form.Label>
-            <Form.Control type="date" />
+            <Form.Control type="text" defaultValue={assignment.due || "TBA"} readOnly />
           </Col>
         </Row>
 
         {/* Buttons */}
         <div className="d-flex justify-content-end gap-2 mt-4">
-          <Button variant="secondary">Cancel</Button>
-          <Button variant="primary">Save</Button>
+          <Link href={`/Courses/${cid}/Assignments`} className="btn btn-secondary">
+            Cancel
+          </Link>
+          <Link href={`/Courses/${cid}/Assignments`} className="btn btn-primary">
+            Save
+          </Link>
         </div>
       </Form>
     </div>

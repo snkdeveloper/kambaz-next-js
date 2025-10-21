@@ -36,3 +36,6 @@ body * {
 .wd-assignment-link:hover {
   color: green !important;
 }
+.no-border {
+  border: none; /* no !important */
+}
