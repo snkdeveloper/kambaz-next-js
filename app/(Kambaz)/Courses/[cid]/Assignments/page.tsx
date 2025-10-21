@@ -56,9 +56,9 @@ export default function Assignments() {
                 </Link>
                 <div className="text-muted small mt-1">
                   <span className="text-danger fw-semibold">Multiple Modules</span>{" "}
-                  | <strong>Not available until</strong> {a.available || "TBA"} at 12:00am |{" "}
-                  <strong>Due</strong> {a.due || "TBA"} at 11:59pm |{" "}
-                  {a.points || 100} pts
+                  | <strong>Not available until</strong> { "TBA"} at 12:00am |{" "}
+                  <strong>Due</strong> { "TBA"} at 11:59pm |{" "}
+                  { 100} pts
                 </div>
               </div>
             </div>

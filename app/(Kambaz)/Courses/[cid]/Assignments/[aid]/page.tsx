@@ -36,14 +36,14 @@ export default function AssignmentEditor() {
           as="textarea"
           rows={3}
           defaultValue={
-            assignment.description ||
+            
             "Enter the assignment details or description here."
           }
         />
 
         {/* Points */}
         <Form.Label className="mt-3">Points</Form.Label>
-        <Form.Control type="number" defaultValue={assignment.points || 100} />
+        <Form.Control type="number" defaultValue={ 100} />
 
         {/* Assignment Group & Display Grade */}
         <Row className="mt-3">
@@ -87,7 +87,7 @@ export default function AssignmentEditor() {
             <Form.Label>Due Date</Form.Label>
             <Form.Control
               type="text"
-              defaultValue={assignment.due || "TBA"}
+              defaultValue={"TBA"}
               readOnly
             />
           </Col>
@@ -99,13 +99,13 @@ export default function AssignmentEditor() {
             <Form.Label>Available From</Form.Label>
             <Form.Control
               type="text"
-              defaultValue={assignment.available || "TBA"}
+              defaultValue={"TBA"}
               readOnly
             />
           </Col>
           <Col>
             <Form.Label>Available Until</Form.Label>
-            <Form.Control type="text" defaultValue={assignment.due || "TBA"} readOnly />
+            <Form.Control type="text" defaultValue={ "TBA"} readOnly />
           </Col>
         </Row>
 
