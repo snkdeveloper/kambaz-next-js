@@ -31,6 +31,7 @@ import Highlight from "./Highlight";
 import PathParameters from "./PathParameters";
 
 import TodoList from "./TodoList";
+import TodoItem from "./TodoItem";
 export default function Lab3() {
   console.log('Hello World!');
   return (
@@ -74,6 +75,9 @@ export default function Lab3() {
         vel nihil repellat nemo explicabo excepturi consectetur. Modi omnis minus sequi maiores, provident voluptates.
      </Highlight>
     <PathParameters />
+    <h3>Todo Item</h3>
+    <TodoItem  />
+    <hr/>
     <TodoList />
     </div>
 );}
