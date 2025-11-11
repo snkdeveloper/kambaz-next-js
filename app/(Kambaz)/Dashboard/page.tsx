@@ -32,23 +32,24 @@ export default function Dashboard() {
   const displayedCourses = showAllCourses
     ? courses
     : courses.filter((course) =>
-        enrollments.some(
+        currentUser && enrollments.some(
           (enrollment) =>
             enrollment.user === currentUser._id &&
             enrollment.course === course._id
         )
       );
 
-  const enrolledCoursesCount = courses.filter((course) =>
+  const enrolledCoursesCount = currentUser ? courses.filter((course) =>
     enrollments.some(
       (enrollment) =>
         enrollment.user === currentUser._id &&
         enrollment.course === course._id
     )
-  ).length;
+  ).length : 0;
 
   // Check if user is enrolled in a course
   const isEnrolled = (courseId: string) => {
+    if (!currentUser) return false;
     return enrollments.some(
       (enrollment) =>
         enrollment.user === currentUser._id &&
@@ -58,12 +59,14 @@ export default function Dashboard() {
 
   // Handle enrollment
   const handleEnroll = (courseId: string) => {
+    if (!currentUser) return;
     // Add enrollment logic here
     console.log("Enrolling in course:", courseId);
   };
 
   // Handle unenrollment
   const handleUnenroll = (courseId: string) => {
+    if (!currentUser) return;
     // Add unenrollment logic here
     console.log("Unenrolling from course:", courseId);
   };
