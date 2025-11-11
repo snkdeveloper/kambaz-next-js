@@ -1,76 +1,140 @@
-// app/(Kambaz)/Account/Profile/page.tsx
-
 "use client";
+import { useRouter } from "next/navigation";
+import { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { setCurrentUser } from "../reducer";
+import { Button, FormControl } from "react-bootstrap";
 
-import Link from "next/link";
-import { Form, Card, Container, Row, Col, Button } from "react-bootstrap";
-import 'bootstrap/dist/css/bootstrap.min.css';
 
 export default function Profile() {
-  return (
-    <div>
-      
-    <Container fluid className="vh-100">
-      <Row className="h-100 justify-content-center align-items-center">
-        <Col xs={12} md={6} lg={4}>
-          <Card className="p-4 shadow-sm">
-            <h3 className="mb-4 text-center">Profile</h3>
-            <Form>
-              <Form.Control
-                type="text"
-                placeholder="Username"
-                defaultValue="alice"
-                className="mb-3"
-              />
-              <Form.Control
-                type="password"
-                placeholder="Password"
-                defaultValue="123"
-                className="mb-3"
-              />
-              <Form.Control
-                type="text"
-                placeholder="First Name"
-                defaultValue="Alice"
-                className="mb-3"
-                id="wd-firstname"
-              />
-              <Form.Control
-                type="text"
-                placeholder="Last Name"
-                defaultValue="Wonderland"
-                className="mb-3"
-                id="wd-lastname"
-              />
-              <Form.Control
-                type="date"
-                defaultValue="2000-01-01"
-                className="mb-3"
-                id="wd-dob"
-              />
-              <Form.Control
-                type="email"
-                placeholder="Email"
-                defaultValue="alice@wonderland"
-                className="mb-3"
-                id="wd-email"
-              />
-              <Form.Select defaultValue="FACULTY" className="mb-3" id="wd-role">
-                <option value="USER">User</option>
-                <option value="ADMIN">Admin</option>
-                <option value="FACULTY">Faculty</option>
-                <option value="STUDENT">Student</option>
-              </Form.Select>
+  const handleSignout = () => {
+  dispatch(setCurrentUser(null));
+  router.push("/Account/Signin");
+};
+  const dispatch = useDispatch();
+  const router = useRouter();
+  const { currentUser } = useSelector((state: any) => state.accountReducer);
 
-              {/* Sign Out Button */}
-              <Link href="/Account/Signin" className="btn btn-danger w-100 mt-2 text-center">
-                Sign out
-              </Link>
-            </Form>
-          </Card>
-        </Col>
-      </Row>
-    </Container>
+  // Initialize with all fields as empty strings to avoid undefined
+  const [profile, setProfile] = useState({
+    _id: "",
+    username: "",
+    password: "",
+    firstName: "",
+    lastName: "",
+    dob: "",
+    email: "",
+    role: "STUDENT",
+  });
+
+  useEffect(() => {
+    // Redirect if not logged in
+    if (!currentUser) {
+      router.push("/Account/Signin");
+      return;
+    }
+    
+    // Populate profile with current user data, ensuring no undefined values
+    setProfile({
+      _id: currentUser._id || "",
+      username: currentUser.username || "",
+      password: currentUser.password || "",
+      firstName: currentUser.firstName || "",
+      lastName: currentUser.lastName || "",
+      dob: currentUser.dob || "",
+      email: currentUser.email || "",
+      role: currentUser.role || "STUDENT",
+    });
+  }, [currentUser, router]);
+
+  const signout = () => {
+    dispatch(setCurrentUser(null));
+    router.push("/Account/Signin");
+  };
+
+  const handleSave = () => {
+    dispatch(setCurrentUser(profile));
+    alert("Profile updated successfully!");
+  };
+
+  return (
+    <div className="wd-profile-screen p-4">
+      <h3>Profile</h3>
+      {currentUser && (
+        <div>
+          <FormControl
+            value={profile.username}
+            id="wd-username"
+            className="mb-2"
+            onChange={(e) => setProfile({ ...profile, username: e.target.value })}
+            placeholder="Username"
+          />
+          <FormControl
+            value={profile.password}
+            id="wd-password"
+            type="password"
+            className="mb-2"
+            onChange={(e) => setProfile({ ...profile, password: e.target.value })}
+            placeholder="Password"
+          />
+          <FormControl
+            value={profile.firstName}
+            id="wd-firstname"
+            className="mb-2"
+            onChange={(e) => setProfile({ ...profile, firstName: e.target.value })}
+            placeholder="First Name"
+          />
+          <FormControl
+            value={profile.lastName}
+            id="wd-lastname"
+            className="mb-2"
+            onChange={(e) => setProfile({ ...profile, lastName: e.target.value })}
+            placeholder="Last Name"
+          />
+          <FormControl
+            value={profile.dob}
+            id="wd-dob"
+            type="date"
+            className="mb-2"
+            onChange={(e) => setProfile({ ...profile, dob: e.target.value })}
+          />
+          <FormControl
+            value={profile.email}
+            id="wd-email"
+            type="email"
+            className="mb-2"
+            onChange={(e) => setProfile({ ...profile, email: e.target.value })}
+            placeholder="Email"
+          />
+          <select
+            className="form-control mb-2"
+            id="wd-role"
+            value={profile.role}
+            onChange={(e) => setProfile({ ...profile, role: e.target.value })}
+          >
+            <option value="USER">User</option>
+            <option value="ADMIN">Admin</option>
+            <option value="FACULTY">Faculty</option>
+            <option value="STUDENT">Student</option>
+          </select>
+          
+          <Button 
+            onClick={handleSave} 
+            className="w-100 mb-2"
+            variant="primary"
+          >
+            Save
+          </Button>
+          <Button 
+            onClick={signout} 
+            className="w-100" 
+            id="wd-signout-btn"
+            variant="danger"
+          >
+            Sign out
+          </Button>
+        </div>
+      )}
     </div>
   );
 }

@@ -1,50 +1,80 @@
-// app/(Kambaz)/Account/Signin/page.tsx
-
 "use client";
-
+import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { useRouter } from "next/navigation";
+import { setCurrentUser } from "../reducer";
+import * as db from "../../Database";
 import Link from "next/link";
-import { Form, Card, Container, Row, Col } from "react-bootstrap";
-import 'bootstrap/dist/css/bootstrap.min.css';
+import { Button, FormControl } from "react-bootstrap";
 
-export default function Signin() {
+export default function SignIn() {
+  const [credentials, setCredentials] = useState({ 
+    username: "", 
+    password: "" 
+  });
+  const dispatch = useDispatch();
+  const router = useRouter();
+
+  const handleSignin = () => {
+    console.log("🔐 Attempting signin with:", credentials.username);
+    
+    const user = db.users.find(
+      (u: any) => 
+        u.username === credentials.username && 
+        u.password === credentials.password
+    );
+    
+    if (user) {
+      console.log("✅ User found:", user);
+      dispatch(setCurrentUser(user));
+      
+      // Small delay to ensure Redux updates
+      setTimeout(() => {
+        router.push("/Dashboard");
+      }, 100);
+    } else {
+      console.log("❌ Invalid credentials");
+      alert("Invalid username or password!");
+    }
+  };
+
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      handleSignin();
+    }
+  };
+
   return (
-    <div>
-   
-    <Container fluid className="vh-100">
-      <Row className="h-100 justify-content-center align-items-center">
-        <Col xs={12} md={6} lg={4}>
-          <Card className="p-4 shadow-sm">
-            <h3 className="mb-4 text-center">Sign in</h3>
-            <Form>
-              <Form.Control 
-                id="wd-username"
-                type="text"
-                placeholder="Username"
-                className="mb-3"
-              />
-              <Form.Control
-                id="wd-password"
-                type="password"
-                placeholder="Password"
-                className="mb-3"
-              />
-              <Link 
-                id="wd-signin-btn"
-                href="/Account/Profile"
-                className="btn btn-primary w-100 mb-3 text-center"
-              >
-                Sign in
-              </Link>
-              <div className="text-center">
-                <Link id="wd-signup-link" href="/Account/Signup">
-                  Sign up
-                </Link>
-              </div>
-            </Form>
-          </Card>
-        </Col>
-      </Row>
-    </Container>
+    <div id="wd-signin-screen" className="p-4">
+      <h3>Sign in</h3>
+      <FormControl
+        id="wd-username"
+        placeholder="username"
+        className="mb-2"
+        value={credentials.username}
+        onChange={(e) => setCredentials({ ...credentials, username: e.target.value })}
+        onKeyPress={handleKeyPress}
+      />
+      <FormControl
+        id="wd-password"
+        placeholder="password"
+        type="password"
+        className="mb-2"
+        value={credentials.password}
+        onChange={(e) => setCredentials({ ...credentials, password: e.target.value })}
+        onKeyPress={handleKeyPress}
+      />
+      <Button 
+        onClick={handleSignin}
+        variant="primary"
+        className="w-100 mb-2"
+        id="wd-signin-btn"
+      >
+        Sign in
+      </Button>
+      <Link href="/Account/Signup" id="wd-signup-link">
+        Sign up
+      </Link>
     </div>
   );
 }
