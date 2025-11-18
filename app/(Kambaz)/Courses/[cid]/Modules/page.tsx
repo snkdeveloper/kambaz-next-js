@@ -15,13 +15,13 @@ export default function Modules() {
   const [moduleName, setModuleName] = useState("");
   const dispatch = useDispatch();
   const { modules } = useSelector((state: any) => state.modulesReducer);
-    const onUpdateModule = async (module: any) => {
+
+  const onUpdateModule = async (module: any) => {
     await client.updateModule(module);
     const newModules = modules.map((m: any) => m._id === module._id ? module : m );
     dispatch(setModules(newModules));
   };
  
-  
   const onRemoveModule = async (moduleId: string) => {
     await client.deleteModule(moduleId);
     dispatch(setModules(modules.filter((m: any) => m._id !== moduleId)));
@@ -31,10 +31,11 @@ export default function Modules() {
     const modules = await client.findModulesForCourse(cid as string);
     dispatch(setModules(modules));
   };
-    const onCreateModuleForCourse = async () => {
+
+  const onCreateModuleForCourse = async () => {
     if (!cid) return;
-    const newModule = { name: moduleName, course: cid };
-    const module = await client.createModuleForCourse(cid, newModule);
+    const newModule = { name: moduleName, course: cid as string };
+    const module = await client.createModuleForCourse(cid as string, newModule);
     dispatch(setModules([...modules, module]));
   };
 
@@ -95,7 +96,7 @@ export default function Modules() {
                   <ModuleControlButtons
                     moduleId={module._id}
                     editModule={() => dispatch(editModule(module._id))}
-                   deleteModule={(moduleId) => onRemoveModule(moduleId)}
+                    deleteModule={(moduleId) => onRemoveModule(moduleId)}
                   />
                 </div>
               </div>
@@ -120,14 +121,14 @@ export default function Modules() {
 
       <style jsx>{`
         .module-item {
-          border-left: 6px solid #28a745; /* green left border for modules */
+          border-left: 6px solid #28a745;
         }
         .lesson-item {
-          border-left: 4px solid #28a745; /* green left border for lessons */
-          padding-left: 0.75rem !important; /* ensure text doesn’t overlap border */
+          border-left: 4px solid #28a745;
+          padding-left: 0.75rem !important;
         }
         .module-header {
-          background-color: #adb5bd; /* light medium grey header */
+          background-color: #adb5bd;
         }
         .module-name {
           word-break: break-word;
