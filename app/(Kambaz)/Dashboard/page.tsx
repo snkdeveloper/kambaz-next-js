@@ -14,7 +14,6 @@ export default function Dashboard() {
   const dispatch = useDispatch();
   const [showAllCourses, setShowAllCourses] = useState(false);
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [course, setCourse] = useState<any>({
     _id: "0",
     name: "New Course",
@@ -27,7 +26,6 @@ export default function Dashboard() {
 
   const [enrolledCourses, setEnrolledCourses] = useState<any[]>([]);
 
-  // Fetch all courses and enrolled courses for current user
   const fetchCourses = async () => {
     if (!currentUser) return;
     try {
@@ -51,7 +49,6 @@ export default function Dashboard() {
 
   const isEnrolled = (courseId: string) => enrolledCourses.some((c) => c._id === courseId);
 
-  // Enrollment handlers
   const handleEnroll = async (courseId: string) => {
     if (!currentUser) {
       alert("You must be logged in to enroll");
@@ -75,7 +72,6 @@ export default function Dashboard() {
     }
   };
 
-  // Course management handlers
   const handleAddCourse = async () => {
     try {
       const newCourse = await api.createCourse(course);
@@ -171,9 +167,10 @@ export default function Dashboard() {
                     {c.description}
                   </CardText>
 
-                  <Button variant="primary" as={Link} href={`/Courses/${c._id}/Home`}>
-                    Go
-                  </Button>
+                  {/* FIXED BUTTON */}
+                  <Link href={`/Courses/${c._id}/Home`} passHref>
+                    <Button variant="primary">Go</Button>
+                  </Link>
 
                   {isEnrolled(c._id) ? (
                     <button
