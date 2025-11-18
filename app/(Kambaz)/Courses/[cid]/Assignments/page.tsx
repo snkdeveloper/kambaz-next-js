@@ -1,10 +1,13 @@
+// app/(Kambaz)/Courses/[cid]/Assignments/page.tsx
 "use client";
+import { useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
-import { deleteAssignment } from "./reducer";
+import { setAssignments, deleteAssignment } from "./reducer";
 import { FaPencil, FaTrash } from "react-icons/fa6";
 import { FaPlus } from "react-icons/fa";
 import { ListGroup, Button } from "react-bootstrap";
+import * as client from "./client";
 
 // Safe date formatting function
 const formatDate = (dateString: string | undefined | null) => {
@@ -49,11 +52,47 @@ export default function Assignments() {
   const { assignments } = useSelector((state: any) => state.assignmentsReducer);
   const { currentUser } = useSelector((state: any) => state.accountReducer);
   
+  // Fetch assignments from server on component mount
+ useEffect(() => {
+  const fetchAssignments = async () => {
+    try {
+      console.log("🔄 Fetching assignments for course:", cid);  
+      const serverAssignments = await client.findAssignmentsForCourse(cid as string);
+      console.log("📥 Server returned assignments:", serverAssignments);  
+      console.log("📊 Number of assignments:", serverAssignments.length);  
+      dispatch(setAssignments(serverAssignments));
+    } catch (error) {
+      console.error("❌ Error fetching assignments:", error);
+    }
+  };
+  
+  if (cid) {
+    fetchAssignments();
+  }
+}, [cid, dispatch]);
+  
   const courseAssignments = assignments.filter(
     (assignment: any) => assignment.course === cid
   );
+
+  console.log("🎯 Filtered assignments for display:", courseAssignments);  // ✅ Add
+  console.log("📌 Current course ID:", cid);  // ✅ Add
+  console.log("📦 All assignments in Redux:", assignments);  // ✅ Add
   
   const isFaculty = currentUser?.role === "FACULTY";
+
+  // Delete assignment from server
+  const handleDeleteAssignment = async (assignmentId: string) => {
+    if (window.confirm("Are you sure you want to remove this assignment?")) {
+      try {
+        await client.deleteAssignment(assignmentId);
+        dispatch(deleteAssignment(assignmentId));
+      } catch (error) {
+        console.error("Error deleting assignment:", error);
+        alert("Failed to delete assignment. Please try again.");
+      }
+    }
+  };
 
   return (
     <div id="wd-assignments" className="p-4">
@@ -91,55 +130,53 @@ export default function Assignments() {
           </div>
         </ListGroup.Item>
 
-        {courseAssignments.map((assignment: any) => (
-          <ListGroup.Item key={assignment._id} className="wd-assignment-list-item">
-            <div className="d-flex justify-content-between align-items-center">
-              <div className="flex-grow-1">
-                <div
-                  onClick={() =>
-                    router.push(`/Courses/${cid}/Assignments/${assignment._id}`)
-                  }
-                  style={{ cursor: "pointer" }}
-                  className="wd-assignment-link"
-                >
-                  <strong>{assignment.title}</strong>
-                </div>
-                <div className="text-muted small">
-                  <span className="text-danger">Multiple Modules</span> |{" "}
-                  <strong>Not available until</strong>{" "}
-                  {formatDate(assignment.availableFrom)} at{" "}
-                  {formatTime(assignment.availableFrom)} |{" "}
-                  <strong>Due</strong> {formatDate(assignment.dueDate)} at{" "}
-                  {formatTime(assignment.dueDate)} | {assignment.points} pts
-                </div>
-              </div>
-              {isFaculty && (
-                <div className="d-flex align-items-center">
-                  <FaPencil
-                    className="text-primary me-3"
+        {courseAssignments.length === 0 ? (
+          <ListGroup.Item className="text-center text-muted py-4">
+            No assignments found for this course.
+          </ListGroup.Item>
+        ) : (
+          courseAssignments.map((assignment: any) => (
+            <ListGroup.Item key={assignment._id} className="wd-assignment-list-item">
+              <div className="d-flex justify-content-between align-items-center">
+                <div className="flex-grow-1">
+                  <div
                     onClick={() =>
                       router.push(`/Courses/${cid}/Assignments/${assignment._id}`)
                     }
                     style={{ cursor: "pointer" }}
-                  />
-                  <FaTrash
-                    className="text-danger"
-                    onClick={() => {
-                      if (
-                        window.confirm(
-                          "Are you sure you want to delete this assignment?"
-                        )
-                      ) {
-                        dispatch(deleteAssignment(assignment._id));
-                      }
-                    }}
-                    style={{ cursor: "pointer" }}
-                  />
+                    className="wd-assignment-link"
+                  >
+                    <strong>{assignment.title}</strong>
+                  </div>
+                  <div className="text-muted small">
+                    <span className="text-danger">Multiple Modules</span> |{" "}
+                    <strong>Not available until</strong>{" "}
+                    {formatDate(assignment.availableFrom)} at{" "}
+                    {formatTime(assignment.availableFrom)} |{" "}
+                    <strong>Due</strong> {formatDate(assignment.dueDate)} at{" "}
+                    {formatTime(assignment.dueDate)} | {assignment.points} pts
+                  </div>
                 </div>
-              )}
-            </div>
-          </ListGroup.Item>
-        ))}
+                {isFaculty && (
+                  <div className="d-flex align-items-center">
+                    <FaPencil
+                      className="text-primary me-3"
+                      onClick={() =>
+                        router.push(`/Courses/${cid}/Assignments/${assignment._id}`)
+                      }
+                      style={{ cursor: "pointer" }}
+                    />
+                    <FaTrash
+                      className="text-danger"
+                      onClick={() => handleDeleteAssignment(assignment._id)}
+                      style={{ cursor: "pointer" }}
+                    />
+                  </div>
+                )}
+              </div>
+            </ListGroup.Item>
+          ))
+        )}
       </ListGroup>
     </div>
   );

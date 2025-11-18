@@ -1,4 +1,5 @@
 "use client";
+import * as client from "../client"
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useRouter } from "next/navigation";
@@ -14,33 +15,42 @@ export default function SignIn() {
   });
   const dispatch = useDispatch();
   const router = useRouter();
-
-  const handleSignin = () => {
-    console.log("🔐 Attempting signin with:", credentials.username);
-    
-    const user = db.users.find(
-      (u: any) => 
-        u.username === credentials.username && 
-        u.password === credentials.password
-    );
-    
-    if (user) {
-      console.log("✅ User found:", user);
-      dispatch(setCurrentUser(user));
-      
-      // Small delay to ensure Redux updates
-      setTimeout(() => {
+   const signin = async () => {
+    const user =  await client.signin(credentials);
+    if (!user) return;
+    dispatch(setCurrentUser(user));
+    setTimeout(() => {
         router.push("/Dashboard");
-      }, 100);
-    } else {
-      console.log("❌ Invalid credentials");
-      alert("Invalid username or password!");
-    }
+    }, 100);
   };
+
+
+  // const handleSignin = () => {
+  //   console.log("🔐 Attempting signin with:", credentials.username);
+    
+  //   const user = db.users.find(
+  //     (u: any) => 
+  //       u.username === credentials.username && 
+  //       u.password === credentials.password
+  //   );
+    
+  //   if (user) {
+  //     console.log("✅ User found:", user);
+  //     dispatch(setCurrentUser(user));
+      
+  //     // Small delay to ensure Redux updates
+  //     setTimeout(() => {
+  //       router.push("/Dashboard");
+  //     }, 100);
+  //   } else {
+  //     console.log("❌ Invalid credentials");
+  //     alert("Invalid username or password!");
+  //   }
+  // };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter') {
-      handleSignin();
+      signin();
     }
   };
 
@@ -65,7 +75,7 @@ export default function SignIn() {
         onKeyPress={handleKeyPress}
       />
       <Button 
-        onClick={handleSignin}
+        onClick={signin}
         variant="primary"
         className="w-100 mb-2"
         id="wd-signin-btn"

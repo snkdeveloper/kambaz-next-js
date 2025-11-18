@@ -11,7 +11,7 @@ export default function ModuleControlButtons({
   editModule,
 }: {
   moduleId: string;
-  deleteModule: () => void;
+  deleteModule: (moduleId:string) => void;
   editModule: () => void;
 }) {
   return (
@@ -23,7 +23,7 @@ export default function ModuleControlButtons({
       />
       <FaTrash
         className="text-danger me-2 mb-1"
-        onClick={deleteModule}
+        onClick={()=>deleteModule(moduleId)}
         style={{ cursor: "pointer" }}
       />
       <FaCheckCircle className="text-success me-2" />

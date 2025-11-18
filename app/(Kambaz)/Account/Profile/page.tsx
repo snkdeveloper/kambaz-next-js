@@ -1,8 +1,12 @@
 "use client";
+import * as client from "../client"
 import { useRouter } from "next/navigation";
+import { UseDispatch } from "react-redux";
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { setCurrentUser } from "../reducer";
+
+
 import { Button, FormControl } from "react-bootstrap";
 
 
@@ -47,7 +51,8 @@ export default function Profile() {
     });
   }, [currentUser, router]);
 
-  const signout = () => {
+  const signout = async() => {
+    await client.signout();
     dispatch(setCurrentUser(null));
     router.push("/Account/Signin");
   };
@@ -55,6 +60,13 @@ export default function Profile() {
   const handleSave = () => {
     dispatch(setCurrentUser(profile));
     alert("Profile updated successfully!");
+  
+  };
+
+  const updateProfile = async () => {
+  
+    const updatedProfile = await client.updateUser(profile);
+    dispatch(setCurrentUser(updatedProfile));
   };
 
   return (
@@ -125,6 +137,7 @@ export default function Profile() {
           >
             Save
           </Button>
+           <button onClick={updateProfile} className="btn btn-primary w-100 mb-2"> Update </button>
           <Button 
             onClick={signout} 
             className="w-100" 
