@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { addAssignment, updateAssignment } from "../reducer";
 import { useState, useEffect } from "react";
 import { FormControl, FormGroup, FormLabel, Button } from "react-bootstrap";
-
+import * as client from "../client";
 // Helper to get current date in datetime-local format (YYYY-MM-DDTHH:mm)
 const getCurrentDateTime = () => {
   const now = new Date();
@@ -68,14 +68,21 @@ export default function AssignmentEditor() {
     }
   }, [aid, assignments, cid]);
 
-  const handleSave = () => {
+  const handleSave = async () => {
+  try {
     if (aid === "new") {
-      dispatch(addAssignment(assignment));
+      const createdAssignment = await client.createAssignment(cid as string, assignment);
+      dispatch(addAssignment(createdAssignment));
     } else {
-      dispatch(updateAssignment(assignment));
+      const updatedAssignment = await client.updateAssignment(assignment);
+      dispatch(updateAssignment(updatedAssignment));
     }
     router.push(`/Courses/${cid}/Assignments`);
-  };
+  } catch (error) {
+    console.error("Error saving assignment:", error);
+    alert("Failed to save assignment. Please try again.");
+  }
+};
 
   const handleCancel = () => {
     router.push(`/Courses/${cid}/Assignments`);
