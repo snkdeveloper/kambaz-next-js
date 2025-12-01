@@ -6,9 +6,14 @@ import { LiaBookSolid, LiaCogSolid } from "react-icons/lia";
 import { FaInbox, FaRegCircleUser } from "react-icons/fa6";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
+import { useSelector } from "react-redux";
+import { RootState } from "./store";
 
 export default function KambazNavigation() {
   const pathname = usePathname();
+  const { currentUser } = useSelector((state: RootState) => state.accountReducer);
+  const isSignedIn = !!currentUser;
+
   const links = [
     { label: "Dashboard", path: "/Dashboard", icon: AiOutlineDashboard },
     { label: "Courses",   path: "/Dashboard", icon: LiaBookSolid }, // Redirect Courses to Dashboard
@@ -49,12 +54,15 @@ export default function KambazNavigation() {
 
       {links.map((link) => (
         <ListGroupItem
-          key={link.label} // ✅ Use label as key to ensure uniqueness
-          as={Link}
-          href={link.path}
-          className={`bg-black text-center border-0 ${
-            pathname.includes(link.label) ? "text-danger bg-white" : "text-white bg-black"
-          }`}
+          key={link.label}
+          as={isSignedIn ? Link : "div"}
+          href={isSignedIn ? link.path : undefined}
+          className={`text-center border-0 ${
+            isSignedIn && pathname.includes(link.label)
+              ? "text-danger bg-white"
+              : "text-white bg-black"
+          } ${!isSignedIn ? "opacity-50" : ""}`}
+          style={!isSignedIn ? { cursor: "not-allowed" } : {}}
         >
           {link.icon({ className: "fs-1 text-danger" })}
           <br />

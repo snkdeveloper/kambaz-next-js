@@ -69,20 +69,25 @@ export default function AssignmentEditor() {
   }, [aid, assignments, cid]);
 
   const handleSave = async () => {
-  try {
-    if (aid === "new") {
-      const createdAssignment = await client.createAssignment(cid as string, assignment);
-      dispatch(addAssignment(createdAssignment));
-    } else {
-      const updatedAssignment = await client.updateAssignment(assignment);
-      dispatch(updateAssignment(updatedAssignment));
+    try {
+      if (aid === "new") {
+        const createdAssignment = await client.createAssignment(cid as string, assignment);
+        dispatch(addAssignment(createdAssignment));
+      } else {
+        await client.updateAssignment(assignment);
+        // Fetch updated assignment to get latest data
+        const updatedAssignments = await client.findAssignmentsForCourse(cid as string);
+        const updatedAssignment = updatedAssignments.find((a: any) => a._id === aid);
+        if (updatedAssignment) {
+          dispatch(updateAssignment(updatedAssignment));
+        }
+      }
+      router.push(`/Courses/${cid}/Assignments`);
+    } catch (error) {
+      console.error("Error saving assignment:", error);
+      alert("Failed to save assignment. Please try again.");
     }
-    router.push(`/Courses/${cid}/Assignments`);
-  } catch (error) {
-    console.error("Error saving assignment:", error);
-    alert("Failed to save assignment. Please try again.");
-  }
-};
+  };
 
   const handleCancel = () => {
     router.push(`/Courses/${cid}/Assignments`);
