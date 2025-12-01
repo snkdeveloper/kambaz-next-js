@@ -104,12 +104,20 @@ export default function Dashboard() {
     <div id="wd-dashboard">
       <div className="d-flex justify-content-between align-items-center">
         <h1 id="wd-dashboard-title">Dashboard</h1>
-        <button
-          className="btn btn-primary"
-          onClick={() => setShowAllCourses(!showAllCourses)}
-        >
-          Enrollments
-        </button>
+        <div>
+          <button
+            className={`btn ${!showAllCourses ? 'btn-primary' : 'btn-outline-primary'} me-2`}
+            onClick={() => setShowAllCourses(false)}
+          >
+            My Courses
+          </button>
+          <button
+            className={`btn ${showAllCourses ? 'btn-primary' : 'btn-outline-primary'}`}
+            onClick={() => setShowAllCourses(true)}
+          >
+            All Courses
+          </button>
+        </div>
       </div>
       <hr />
 
@@ -144,7 +152,7 @@ export default function Dashboard() {
       <hr />
 
       <h2 id="wd-dashboard-published">
-        {showAllCourses ? "All Courses" : "Published Courses"} ({displayedCourses.length})
+        {showAllCourses ? "All Courses" : "My Courses"} ({displayedCourses.length})
       </h2>
       <hr />
 
@@ -172,20 +180,25 @@ export default function Dashboard() {
                     <Button variant="primary">Go</Button>
                   </Link>
 
-                  {isEnrolled(c._id) ? (
-                    <button
-                      onClick={(e) => { e.preventDefault(); handleUnenroll(c._id); }}
-                      className="btn btn-danger float-end ms-2"
-                    >
-                      Unenroll
-                    </button>
-                  ) : (
-                    <button
-                      onClick={(e) => { e.preventDefault(); handleEnroll(c._id); }}
-                      className="btn btn-success float-end ms-2"
-                    >
-                      Enroll
-                    </button>
+                  {/* Only show Enroll/Unenroll when viewing All Courses */}
+                  {showAllCourses && (
+                    <>
+                      {isEnrolled(c._id) ? (
+                        <button
+                          onClick={(e) => { e.preventDefault(); handleUnenroll(c._id); }}
+                          className="btn btn-danger float-end ms-2"
+                        >
+                          Unenroll
+                        </button>
+                      ) : (
+                        <button
+                          onClick={(e) => { e.preventDefault(); handleEnroll(c._id); }}
+                          className="btn btn-success float-end ms-2"
+                        >
+                          Enroll
+                        </button>
+                      )}
+                    </>
                   )}
 
                   <button
