@@ -12,9 +12,9 @@ export default function Session({ children }: { children: React.ReactNode }) {
       const currentUser = await client.profile();
       dispatch(setCurrentUser(currentUser));
     } catch (error: any) {
-      // ✅ Don't throw error - user just isn't logged in
-      console.log("No active session");
-      dispatch(setCurrentUser(null));
+      // If no active session, don't overwrite existing local user
+      console.log("No active session; preserving local user if present");
+      // Intentionally avoid dispatching null here to keep localStorage user
     }
   };
 
