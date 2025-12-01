@@ -7,17 +7,14 @@ import { useSelector, useDispatch } from "react-redux";
 import { setCurrentUser } from "../reducer";
 
 
-import { Button, FormControl } from "react-bootstrap";
+import { Button, FormControl, Alert } from "react-bootstrap";
 
 
 export default function Profile() {
-  const handleSignout = () => {
-  dispatch(setCurrentUser(null));
-  router.push("/Account/Signin");
-};
   const dispatch = useDispatch();
   const router = useRouter();
   const { currentUser } = useSelector((state: any) => state.accountReducer);
+  const [message, setMessage] = useState<{ type: "success" | "danger"; text: string } | null>(null);
 
   // Initialize with all fields as empty strings to avoid undefined
   const [profile, setProfile] = useState({
@@ -52,26 +49,46 @@ export default function Profile() {
   }, [currentUser, router]);
 
   const signout = async() => {
-    await client.signout();
-    dispatch(setCurrentUser(null));
-    router.push("/Account/Signin");
+    try {
+      await client.signout();
+    } finally {
+      dispatch(setCurrentUser(null));
+      setMessage({ type: "success", text: "Signed out successfully" });
+      setTimeout(() => {
+        setMessage(null);
+        router.push("/Account/Signin");
+      }, 1000);
+    }
   };
 
   const handleSave = () => {
     dispatch(setCurrentUser(profile));
-    alert("Profile updated successfully!");
+    setMessage({ type: "success", text: "Saved successfully" });
+    setTimeout(() => setMessage(null), 1500);
   
   };
 
   const updateProfile = async () => {
-  
-    const updatedProfile = await client.updateUser(profile);
-    dispatch(setCurrentUser(updatedProfile));
+    try {
+      const updatedProfile = await client.updateUser(profile);
+      // Merge to prevent disappearing fields if server omits some (e.g., password)
+      const merged = { ...profile, ...updatedProfile } as any;
+      dispatch(setCurrentUser(merged));
+      setProfile(merged as any);
+      setMessage({ type: "success", text: "Updated successfully" });
+      setTimeout(() => setMessage(null), 1500);
+    } catch (e) {
+      setMessage({ type: "danger", text: "Update failed. Please try again." });
+      setTimeout(() => setMessage(null), 2000);
+    }
   };
 
   return (
     <div className="wd-profile-screen p-4">
       <h3>Profile</h3>
+      {message && (
+        <Alert variant={message.type} className="py-2">{message.text}</Alert>
+      )}
       {currentUser && (
         <div>
           <FormControl

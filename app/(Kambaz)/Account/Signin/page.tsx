@@ -6,22 +6,34 @@ import { useRouter } from "next/navigation";
 import { setCurrentUser } from "../reducer";
 import * as db from "../../Database";
 import Link from "next/link";
-import { Button, FormControl } from "react-bootstrap";
+import { Button, FormControl, Alert } from "react-bootstrap";
 
 export default function SignIn() {
   const [credentials, setCredentials] = useState({ 
     username: "", 
     password: "" 
   });
+  const [message, setMessage] = useState<{ type: "success" | "danger"; text: string } | null>(null);
   const dispatch = useDispatch();
   const router = useRouter();
    const signin = async () => {
-    const user =  await client.signin(credentials);
-    if (!user) return;
-    dispatch(setCurrentUser(user));
-    setTimeout(() => {
+    try {
+      const user = await client.signin(credentials);
+      if (!user) {
+        setMessage({ type: "danger", text: "Invalid username or password" });
+        setTimeout(() => setMessage(null), 2000);
+        return;
+      }
+      dispatch(setCurrentUser(user));
+      setMessage({ type: "success", text: "Signed in successfully" });
+      setTimeout(() => {
+        setMessage(null);
         router.push("/Dashboard");
-    }, 100);
+      }, 1200);
+    } catch (e) {
+      setMessage({ type: "danger", text: "Sign in failed. Please try again." });
+      setTimeout(() => setMessage(null), 2000);
+    }
   };
 
 
@@ -56,6 +68,9 @@ export default function SignIn() {
 
   return (
     <div id="wd-signin-screen" className="p-4">
+      {message && (
+        <Alert variant={message.type} className="py-2">{message.text}</Alert>
+      )}
       <h3>Sign in</h3>
       <FormControl
         id="wd-username"
